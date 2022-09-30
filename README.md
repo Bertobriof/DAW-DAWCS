@@ -71,7 +71,7 @@ Cada vez que retomes tu trabajo asegúrate tener la última versión de las espe
 
 2. (C*ada vez que retomes trabajo*) Revisa novedades y obtenlas del repo del profesor
 
-    `git fetch profesor master`
+    `git fetch profesor main`
 
 Si has seguido las indicaciones de este README no deberían producirse conflictos. Si se produjesen adviértelo al profesor.
 
@@ -80,7 +80,7 @@ Si has seguido las indicaciones de este README no deberían producirse conflicto
     git checkout rama
     
     # Después mézclate en tu rama actual las novedades
-    git merge profesor/master
+    git merge profesor/main
     ```
 En los [apuntes](https://sabela.pages.iessanclemente.net/dwcs/herramientas/2.git/) tienes más información sobre el uso de docker. 
 
