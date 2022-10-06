@@ -62,12 +62,13 @@ Puedes crearte las ramas que necesites para el trabajo. Pero en el momento de la
 ### Revisa si se han producido actualizaciones en las especificaciones
 
 Cada vez que retomes tu trabajo asegúrate tener la última versión de las especificaciones. Para ello:
-
+0. En el caso de que hayas añadido la url remota con la unidad, primero bórrala: 
+    `git remote rm profesor`
 1. (*Sólo la primera vez*) Añade como repo remoto el repo del profesor desde el que has creado tu fork.
 
     `git remote add profesor <url-repoProfesor>`
     En este caso: 
-    `git remote add profesor  https://gitlab.iessanclemente.net/dwcs1/dwcs_ud2_tareas` 
+    `git remote add profesor  https://gitlab.iessanclemente.net/dwcs1/dwcs_tareas` 
 
 2. (C*ada vez que retomes trabajo*) Revisa novedades y obtenlas del repo del profesor
 
