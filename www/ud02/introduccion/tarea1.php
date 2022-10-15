@@ -1,4 +1,4 @@
-<? php
-echo '¿Cómo estás';
+<?php
+echo '¿Cómo estás?';
 echo 'Estoy bien, gracias.';
-??>
+?>

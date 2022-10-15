@@ -16,5 +16,48 @@ Fichero         | Contiene el `div` con `id`
 
 Modifica el `index.php` para que cargue los recursos indicados en el paso anterior
 */
-
+include("logo.php");
+include("footer.php");
+include("content.php");
+include("pictures.php");
+include("sidebar.php");
+include("menu.php");
 ?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<title>Web Portal - Includes and requires</title>
+	<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
+
+<div id="header" class="container">
+
+	<?php logo(); ?>
+	
+    <?php menu();?>
+	
+</div>
+
+<?php pictures()?>
+
+<div id="page">
+	<div id="bg1">
+		<div id="bg2">
+			<div id="bg3">
+			
+				<?php content() ?>
+				
+			    <?php sidebar() ?>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+ <?php footer() ?>
+
+</body>
+</html>
