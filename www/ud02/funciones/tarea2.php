@@ -43,10 +43,12 @@
         $DNI_letra = substr($b,8,9); //extraigo la letra
         $resto = $DNI_num%23;
         if($DNI_letra==$digitos_control[$resto]) { //Si coinciden las letras devuelve ok
-            return 'DNI válido';
+            echo 'DNI válido';
+            return true;
         }
         else { //si no inválido
-            return 'DNI inválido';
+            echo 'DNI inválido';
+            return false;
         }
     }
     else {
