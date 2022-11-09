@@ -1,4 +1,4 @@
-# Boletín Tareas UD02
+# Boletín Tareas 
 
 ## Para qué es este repo?
 
