@@ -17,3 +17,6 @@ RUN docker-php-ext-install zip
 RUN docker-php-ext-install gd
 
 RUN a2enmod rewrite
+#Xdebug
+RUN pecl install xdebug-3.1.2
+ADD xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
