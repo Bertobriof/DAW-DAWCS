@@ -1,18 +1,54 @@
 <?php
+include("funciones.php");
+include("conexiones.php");
 //1. Conectar a la base de datos
-
 //2. Comprobar la conexión
 
-//3. Recoger los datos del formulario 
 
-//4. Validar los datos del formulario evitando posibles ataques y comprobando que estén los datos obligatorios. 
+//crear 
+$servername = 'db';
+$username = 'root';
+$password = 'test';
 
-//5. Insertar el registro en la base de datos
+$password;
+$userName;
 
-//6. Comprobar la insercción 
+try{
+  $connPDO = new PDO("mysql:host=$servername;dbname=donacion",$username,$password);
+  $connPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  echo "Conexión realizaa con exito";
+  $sql = "CREATE DATABASE IF NOT EXISTS donacion";
+  $connPDO->exec($sql);
+  
+  $sql = "CREATE TABLE IF NOT EXISTS administradores(
+    nombreUsuario VARCHAR(50) PRIMARY KEY ,
+    contrasinal varchar(200) NOT NULL
+    )";
+    $connPDO->exec($sql);
+    echo "La tabla se ha creado correctamente";
+    //3. Recoger los datos del formulario 
+    //4. Validar los datos del formulario evitando posibles ataques y comprobando que estén los datos obligatorios. 
+    if(isset($_POST['enviar']))  {
+      $password = validarFormulario($_POST['password']);
+      $userName = validarFormulario($_POST['name']);
+      
+      //5. Insertar el registro en la base de datos
+      $stmt = $connPDO->prepare("INSERT INTO administradores (nombreUsuario, contrasinal) VALUES (:usuario,:contra)");
+      $stmt->bindParam(':usuario',$userName);
+      $stmt->bindParam('contra',$password);
+      $stmt->execute();
+      //6. Comprobar la insercción 
+      echo "Registro añadido";
+    }
+
+
+} catch (PDOException $e) {
+  echo $sql."<br>". $e->getMessage();
+}
+
 
 //7. Cerrar la conexión 
-
+$connPDO=null;
 ?>
 
 <!doctype html>
@@ -33,7 +69,7 @@
       <br><br>
       Contraseña: <input type="password" name="password">
       <br><br>
-      <input type="submit" name="submit" value="Submit"> 
+      <input type="submit" name="enviar" value="Enviar"> 
     </form>
 </div>
   </body>

@@ -1,3 +1,8 @@
+<?php
+include("conexiones.php");
+conexionCrearBD();
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
