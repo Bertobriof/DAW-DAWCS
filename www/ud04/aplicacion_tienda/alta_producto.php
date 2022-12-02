@@ -6,121 +6,7 @@ if(!isset($_SESSION['contar'])) {
   $_SESSION['contar'] = 0;
 } else {
   $_SESSION['contar']++;
-}
-?>
-
-<?php
-include("funciones.php");
-//1. Conectar a la base de datos
-@$conexion = new mysqli('db','root','test'); //el @ para omitir el warning
-//2. Comprobar la conexión
-$error = $conexion->connect_error;
-if($error != null) {
-  die("Fallo de conexión: ".$conexion->connect_error." Con número: ".$error);
-}
-echo "Conexión correcta. ";
-
-$sql = "CREATE DATABASE IF NOT EXISTS tienda";
-if($conexion->query($sql)) {
-  echo "Base de datos creada correctamente. ";
-  $conexion->select_db("tienda");
-} else {
-  echo "Error creando base de datos.".$conexion->error;
-}
-
-//4. Validar los datos del formulario evitando posibles ataques y comprobando que estén los datos obligatorios. 
-function test_input($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
-//toma de registros y validación
-$nombreProducto=$descripcion=$precio=$unidades="";
-$nombreProductoErr=$descripcionErr=$precioErr=$unidadesErr=$nombreArchivoErr="";
-$archivo = false;
-if($_SERVER['REQUEST_METHOD'] == "POST") {
-  if(!empty($_POST['productName']) && is_string($_POST['productName']) && strlen($_POST['productName']) <= 50) {
-    $nombreProducto = test_input($_POST['productName']);
-  } else {
-    $nombreProductoErr = "Introduce un nombre válido: texto y menos de 50 carácteres.";
-  }
-  if(!empty($_POST['descripcion']) && is_string($_POST['descripcion']) && strlen($_POST['descripcion']) <= 100) {
-    $descripcion = test_input($_POST['descripcion']);
-  } else {
-    $descripcionErr = "Introduce una descripción válida: tezto y menos de 100 carácteres.";
-  }
-  if(!empty($_POST[$_POST['precio']]) && is_float($_POST['precio'])) {
-    $precio = test_input($_POST['precio']);
-  } else {
-    $precioErr = "Introduce un precio. Solo admite valores numéricos.";
-  }
-  if(!empty($_POST['unidades']) && is_float($_POST['unidades'])) {
-    $unidades = test_input($_POST['unidades']);
-  } else {
-    $unidadesErr = "Introduce unidades. Solo admite valores numéricos.";
-  }
-  if(!empty($_FILES['archivo']['name'])) {
-    $nombreArchivo = test_input($_FILES['archivo']['name']);
-    $archivo = true;
-  } else {
-    $nombreArchivoErr = "Adjunta un archivo";
-  }
-
-}
-
-//subida de archivos:
-$targetDir = "archivos/";
-$targetFile = $targetDir . basename(@$nombreArchivo);
-$uploaded = false; //un booleano para controlar cuando se sube en archivo y asi controlar e la BD el registro.
-$imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
-if(!empty($_FILES['archivo']['name']) && !file_exists($targetFile) && $archivo == true) {
-  if(comprobaTamanho($_FILES["archivo"]["size"])) {
-    if(compruebaExtension($imageFileType)) {
-      if(move_uploaded_file($_FILES['archivo']['tmp_name'],$targetFile)) {
-        echo "El fichero ". htmlspecialchars(basename($_FILES['archivo']['name'])). "ha sido subido.";
-        $uploaded = true;
-      } else {
-        echo "No se ha podido subir el archivo";
-        $uploaded = false;
-      }
-    }
-  }
-} else {
-  echo "El fichero ya existe";
-  $uploaded = false;
-}
-
-
-//5. Insertar el registro en la base de datos
-//5.1 CREAR TABLA 
-$sql = "CREATE TABLE IF NOT EXISTS productos (
-    id INT(6) AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    descipcion VARCHAR(100) NOT NULL,
-    precio FLOAT(8) NOT NULL,
-    unidades FLOAT(8) NOT NULL,
-    foto BLOB NOT NULL
-  )";
-  if($conexion->query($sql)) {
-    echo "Tabla creada correctamente";
-  } else {
-    echo "Error creando table. ".$conexion->error;
-  }
-//5.2 INSERCCIÓN DE REGISTROS
-if(isset($_POST['submit']) && $uploaded == true && !is_null($nombreProducto) && !is_null($descripcion) && !is_null($unidades) && !is_null($precio) && !is_null($nombreArchivo)) {
-  $stmt = $conexion->prepare("INSERT INTO productos (nombre,descipcion,precio,unidades, foto) VALUES (?,?,?,?,?)");
-  $stmt->bind_param("ssiib",$nombreProducto,$descripcion,$precio,$unidades,$nombreArchivo);
-  $stmt->execute();
-  $ultimoID = $conexion->insert_id;
-  $stmt->close();
-  echo "Datos insertados con ID: ".$ultimoID;
-}
-//6. Comprobar la insercción 
-
-//7. Cerrar la conexión
-$conexion->close();
-?>
+}?>
 <!doctype html>
 <html lang="es">
   <head>
@@ -151,6 +37,117 @@ $conexion->close();
         <br><br>
         <input type="submit" name="submit" value="Registrar producto"> 
       </form>
+
+
+      <?php
+include("funciones.php");
+//1. Conectar a la base de datos
+@$conexion = new mysqli('db','root','test'); //el @ para omitir el warning
+//2. Comprobar la conexión
+$error = $conexion->connect_error;
+if($error != null) {
+  die("Fallo de conexión: ".$conexion->connect_error." Con número: ".$error);
+}
+echo "Conexión correcta. ";
+
+$sql = "CREATE DATABASE IF NOT EXISTS tienda";
+if($conexion->query($sql)) {
+  echo "Base de datos creada correctamente. ";
+  $conexion->select_db("tienda");
+} else {
+  echo "Error creando base de datos.".$conexion->error;
+}
+//toma de registros y validación
+$nombreProducto=$descripcion=$precio=$unidades="";
+$nombreProductoErr=$descripcionErr=$precioErr=$unidadesErr=$nombreArchivoErr="";
+$archivo = false;
+if($_SERVER['REQUEST_METHOD'] == "POST") {
+  if(!empty($_POST['productName']) && is_string($_POST['productName']) && strlen($_POST['productName']) <= 50) {
+    $nombreProducto = test_input($_POST['productName']);
+  } else {
+    $nombreProductoErr = "Introduce un nombre válido: texto y menos de 50 carácteres.";
+  }
+  if(!empty($_POST['descripcion']) && is_string($_POST['descripcion']) && strlen($_POST['descripcion']) <= 100) {
+    $descripcion = test_input($_POST['descripcion']);
+  } else {
+    $descripcionErr = "Introduce una descripción válida: tezto y menos de 100 carácteres.";
+  }
+  if(!empty($_POST['precio'])&& is_numeric($_POST['precio'])) {
+    $precio = test_input($_POST['precio']);
+  } else {
+    $precioErr = "Introduce un precio. Solo admite valores numéricos.";
+  }
+  if(!empty($_POST['unidades']) && is_numeric($_POST['unidades'])) {
+    $unidades = test_input($_POST['unidades']);
+  } else {
+    $unidadesErr = "Introduce unidades. Solo admite valores numéricos.";
+  }
+  if(!empty($_FILES['archivo']['name'])) {
+    $nombreArchivo = test_input($_FILES['archivo']['name']);
+    $archivo = true;
+  } else {
+    $nombreArchivoErr = "Adjunta un archivo";
+  }
+
+}
+
+//subida de archivos:
+$targetDir = "archivos/";
+$FotoBD = "";
+$targetFile = $targetDir . basename(@$nombreArchivo);
+$uploaded = false; //un booleano para controlar cuando se sube en archivo y asi controlar e la BD el registro.
+$imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
+if(!empty($_FILES['archivo']['name']) && !file_exists($targetFile) && $archivo == true) {
+  if(comprobaTamanho($_FILES["archivo"]["size"])) {
+    if(compruebaExtension($imageFileType)) {
+      if(move_uploaded_file($_FILES['archivo']['tmp_name'],$targetFile)) {
+        echo "El fichero ". htmlspecialchars(basename($_FILES['archivo']['name'])). "ha sido subido.";
+        $FotoBD = $_FILES['archivo']['tmp_name'];
+        $uploaded = true;
+        
+      } else {
+        echo "No se ha podido subir el archivo";
+        $uploaded = false;
+      }
+    }
+  }
+} else {
+  echo "El fichero ya existe";
+  $uploaded = false;
+}
+
+
+//5. Insertar el registro en la base de datos
+//5.1 CREAR TABLA 
+$sql = "CREATE TABLE IF NOT EXISTS productos (
+    id INT(6) AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    descipcion VARCHAR(100) NOT NULL,
+    precio FLOAT(8) NOT NULL,
+    unidades FLOAT(8) NOT NULL,
+    foto BLOB NOT NULL
+  )";
+  if($conexion->query($sql)) {
+    echo "Tabla creada correctamente";
+  } else {
+    echo "Error creando table. ".$conexion->error;
+  }
+//5.2 INSERCCIÓN DE REGISTROS
+if(isset($_POST['submit']) && $uploaded == true && !is_null($nombreProducto) && !is_null($descripcion) && !is_null($unidades) && !is_null($precio) && !is_null($nombreArchivo)) {
+  $subirFotoBD = addslashes($_FILES['archivo']['tmp_name']);
+  $stmt = $conexion->prepare("INSERT INTO productos (nombre,descipcion,precio,unidades, foto) VALUES (?,?,?,?,?)");
+  $stmt->bind_param("ssiib",$nombreProducto,$descripcion,$precio,$unidades,$subirFotoBD);
+  $stmt->execute();
+  $ultimoID = $conexion->insert_id;
+  $stmt->close();
+  echo "Datos insertados con ID: ".$ultimoID;
+}
+//6. Comprobar la insercción 
+
+//7. Cerrar la conexión
+$conexion->close();
+?>
+
     </div>
     <footer>
       <a class="btn btn-primary" href="index.php" role="button"> Volver a inicio</a>

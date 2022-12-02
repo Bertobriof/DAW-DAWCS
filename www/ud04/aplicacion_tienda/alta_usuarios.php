@@ -43,8 +43,8 @@ function test_input($data) {
   $data = htmlspecialchars($data);
   return $data;
 }
-$nombre=$apelidos=$idade=$provincia="";
-$nombreErr=$apelidosErr=$idadeErr=$provinciaErr="";
+$userName=$password=$nombre=$apelidos=$idade=$provincia="";
+$userNameErr=$passwordErr=$nombreErr=$apelidosErr=$idadeErr=$provinciaErr="";
 if($_SERVER['REQUEST_METHOD'] == "POST") {
   if(!empty($_POST['name']) && is_string($_POST['name'])) {
     $nombre = test_input($_POST['name']);
@@ -72,6 +72,16 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
     $provincia=null;
     $provinciaErr = "Se requiere seleccionar una provincia.";
   }
+  if(!empty($_POST['userName']) && is_string($_POST['userName']) && strlen($_POST['userName']) <= 50) {
+    $userName = test_input($_POST['userName']);
+  } else {
+    $userNameErr = "Introduce un nombre válido: texto y menos de 50 carácteres.";
+  }
+  if(!empty($_POST['password']) && is_string($_POST['password']) && strlen($_POST['password']) <= 100) {
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); //encriptamos la contraseña
+  } else {
+    $passwordErr = "Introduce una descripción válida: tezto y menos de 100 carácteres.";
+  }
 }
 //5. Insertar el registro en la base de datos
 //5.1 CREAR TABLA 
@@ -80,7 +90,9 @@ $sql = "CREATE TABLE IF NOT EXISTS usuarios (
   nombre VARCHAR(50) NOT NULL,
   apellidos VARCHAR(100) NOT NULL,
   edad int(3) NOT NULL,
-  provincia VARCHAR(50) NOT NULL
+  provincia VARCHAR(50) NOT NULL,
+  nombreUsuario VARCHAR(50) NOT NULL UNIQUE,
+  contrasena VARCHAR(100) NOT NULL
   )";
   if($conexion->query($sql)) {
     echo "Tabla creada correctamente";
@@ -90,17 +102,15 @@ $sql = "CREATE TABLE IF NOT EXISTS usuarios (
 //5.2 INSERCCIÓN DE REGISTROS
 $editarID;
 
-if(isset($_POST['submit']) && $_SERVER['REQUEST_METHOD']== 'POST' && !is_null($nombre) && !is_null($apelidos) && !is_null($idade) && !is_null($provincia) && is_null($editarID)) {
-  $stmt = $conexion->prepare("INSERT INTO usuarios (nombre,apellidos,edad,provincia) VALUES (?,?,?,?)");
-  $stmt->bind_param("ssis",$nombre,$apelidos,$idade,$provincia);
+if(isset($_POST['submit']) && $_SERVER['REQUEST_METHOD']== 'POST' && !is_null($nombre) && !is_null($apelidos) && !is_null($idade) && !is_null($provincia) && !is_null($password) && !is_null($userName)) {
+  $stmt = $conexion->prepare("INSERT INTO usuarios (nombre,apellidos,edad,provincia,nombreUsuario,contrasena) VALUES (?,?,?,?,?,?)");
+  $stmt->bind_param("ssisss",$nombre,$apelidos,$idade,$provincia,$userName,$password);
   $stmt->execute();
   $ultimoID = $conexion->insert_id;
   $stmt->close();
   echo "Datos insertados con ID: ".$ultimoID;
   //editar_usuario
-} elseif($_SERVER['REQUEST_METHOD'=='GET'] && !is_null($nombre) && !is_null($apelidos) && !is_null($idade) && !is_null($provincia) && @$editarID=$_GET['id']) {
-  $sql = "UPDATE tienda SET nombre = ".$nombre.",apellidos=".$apellidos.",edad=".$idade.",provincia=".$provincia." WHERE id=".$editarID;
-}
+} 
 //6. Comprobar la insercción 
 
 //7. Cerrar la conexión f
@@ -121,6 +131,12 @@ $conexion->close();
     <div class="form-group">
 
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <label for="userName">Nombre del producto:  </label>
+        <input type="text" name="userName" placeholder="Introduce un hombre de usuario"><?php echo @$nombreProductoErr;?>
+        <br><br>
+        <label for="password">Contraseña: </label>
+        <input type="text" name="password">
+        <br><br>
     <label for="name">Nombre:  </label>
     <input type="text" name="name"><?php echo $nombreErr;?>
       <br><br>

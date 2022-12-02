@@ -15,11 +15,18 @@ function compruebaExtension($a) {
 // Ambas funciones deben ponerse en un fichero anexo requirido llamado “funciones.php”.
 
 function comprobaTamanho($a) {
-    if($a <500000) {
+    if($a <5000000) {
         return true;
     } else {
         echo "El archivo pesa demasiado";
         return false;
     }
 }
+
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+  }
 ?>
