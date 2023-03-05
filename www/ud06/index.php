@@ -24,11 +24,9 @@ Flight::route('GET /clientes', function(){
         $sentencia->execute();
         $datos = $sentencia->fetchAll();
         Flight::json($datos);
-        
-
 });
 
-Flight::route('GET /clientes/filtro', function(){
+Flight::route('GET /clientes/', function(){
     $sql = 'SELECT * FROM clientes WHERE id = ?';
     $parametros = Flight::request()->data->id;
     $sentencia = Flight::db()->prepare($sql);
