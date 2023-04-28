@@ -1,0 +1,103 @@
+{#Esta es la plantilla principal. Tiene el layout basico de la app y bloques que pueden cambiar de una pagina a otra#}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        {#Cambia el título de la página por un parámetro que envie la app#}
+        <title>{% block title %}{{title}}{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>"> 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+        
+        {# Esto se utilizaría para añadir otros estilos dentro de una plantilla hija #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+        {# Este bloque permitiría añadir alguna otra fuente de JS dentro de una plantilla hija#}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+     <!--Navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Eighth navbar example">
+            <div class="container">
+                <h3 class="text-white">Librería Abierta</h3>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+        
+              <div class="collapse navbar-collapse" id="navbarsExample07">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ path('homepage') }}"{#Pongo el pathname de la homepage#}>Inicio</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ path('videoteca') }}"{#Pongo el pathname de la sección de viodeteca para redirigir#}>Videoteca</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ path('libreria') }}"{#Pongo el pathname de la sección de librería para redirigir#}>Biblioteca</a>
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+          </nav>
+          <!-- contenido-->
+
+        {#Bloque contenido, lo que está dentro de {% block contenido %} va a ser sustituido dentr de las plantillas hijas.#}
+        {% block contenido %}
+                <div class="row d-flex flex-column justify-content-center align-items-center bg-light text text-left pt-3 pb-3">
+                    <article id="receta1" class="d-flex flex-column justify-content-center bg-light text text-left w-75">
+                        <h1>Bienvenidos a {{title}}</h1>
+                        <h2>Buscar obras:</h2>                 
+                        
+                        <form method="get" action="{{ path('videoteca') }}">
+                          <div class="form-group">
+                            <label for="exampleFormControlSelect2">Selecciona un vídeo</label>
+                            {#Bucle for para extraer las claves del array y generar los selectores#}
+                                <ul>
+                                {% for key, value in catalogo %}
+                                    <li><a class="nav-link" href="{{ path('videoteca', {slug: key} ) }}"{#Pongo el pathname de la sección de viodeteca para redirigir#}>Ir a {{ key }}</a></li>
+                                {% endfor %}
+                                </ul>
+                          </div>
+                          <br>
+                          <input type="submit" value="Buscar" class="btn btn-dark" />
+                        </form>
+
+                    </article>
+                </div>
+        {% endblock %}
+          <!--Quienes somos-->
+          <div class="row pt-3 pb-4 bg-secondary">
+              <div class="d-flex flex-column text-white justify-content-center align-items-center">
+                  <article id="quienesomos" class="w-75">
+                      <h1>Quienes somos</h1>
+                      <p>Somos una aplicación web que aspira a ser una base de datos abierta de cine de autor y libros autopublicados.</p>
+                  </article>
+              </div>
+          </div>
+
+
+                  <!--Footer-->
+          <footer id="contacto" class="footer mt-auto py-3 bg-dark text-white">
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-3">
+                        <h4>Correo electrónico</h4>
+                        <p>hola@libreriaabierta.com</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <h4>Empleo</h4>
+                        <p>empleo@libreriabierta.com</p>
+                    </div>
+                    <div class="col-sm-1"></div>
+
+                </div>
+          </footer>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+{#Hereda el diseño de la plantilla madre, que es homepage.html.twig y sustituye el contenido distinto#}
+{% extends 'libreria/homepage.html.twig' %}
+
+{#Cambia el título de la página por un parámetro que envie la app#}
+{% block title %}
+    {{title}}
+{% endblock %}
+
+
+{# Esto se utilizaría para añadir otros estilos dentro de una plantilla hija #}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{# Este bloque permitiría añadir alguna otra fuente de JS dentro de una plantilla hija#}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+{#Bloque contenido, lo que está dentro de {% block contenido %} va a ser sustituido dentr de las plantillas hijas.#}
+{% block contenido %}
+{#Condicional, revisa el slig y si está vacio imprime todo el array de catalogo de videos. 
+Si tiene un valor imprime el valor de ese slug dentro del array#}
+{% if app.request.get('slug') is empty %}
+    {% for key, value in catalogo %}
+        <h3>{{key}}</h3><br>
+        <p>{{value}}</p>
+    {% endfor %}
+{% else %}
+    <h3>{{app.request.get('slug')}}</h3><br>
+    <p>{{catalogo[app.request.get('slug')]}}</p>
+{% endif %}
+{% endblock %}

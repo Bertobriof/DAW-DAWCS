@@ -1,0 +1,22 @@
+{#Hereda el diseño de la plantilla madre, que es homepage.html.twig y sustituye el contenido distinto#}
+{% extends 'libreria/homepage.html.twig' %}
+
+{#Cambia el título de la página por un parámetro que envie la app#}
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{# Esto se utilizaría para añadir otros estilos dentro de una plantilla hija #}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{# Este bloque permitiría añadir alguna otra fuente de JS dentro de una plantilla hija#}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+{#Bloque contenido, lo que está dentro de {% block contenido %} va a ser sustituido dentr de las plantillas hijas.#}
+{% block contenido %}
+    <h1>Prueba libreria</h1>
+{% endblock %}

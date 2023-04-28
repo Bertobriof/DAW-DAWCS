@@ -5,8 +5,9 @@ require 'flight/Flight.php'; //Librería del framkework flight
 /*Flight::route('/', function() {
     echo 'Hello world';
 });*/
-
 Flight::register('db','PDO',array('mysql:host=db;dbname=dbTarea6','root','test'));
+Flight::register('db','PDO',array('mysql:host=db;dbname=dbTarea6','root','test'));
+Flight::register('db','PDO',array('mysql:host=db;dbname=dbnaame','root','test'));
 
 /*  Tabla Clientes
 Se debe permitir las siguientes acciones sobre la tabla clientes y la ruta ```/clientes```: 
@@ -16,6 +17,47 @@ Se debe permitir las siguientes acciones sobre la tabla clientes y la ruta ```/c
 - DELETE: Dado un id se debe poder eliminar un cliente.
 - PUT: Se podrá modificar de un cliente sus apellidos, edad, email y teléfono. 
 */ 
+
+Flight::route('GET /clientes', function() {
+    $sql = 'SELECT * FROM clientes';
+    $sentencia = Flight::db()->prepare($sql);
+    $sentencia->execute();
+    $datos = $sentencia->fetchAll();
+    Flight::json($datos);
+});
+
+Flight::route('POST /clientes', function() {
+    $sql = 'INSERT INTO clientes(VARIABLE1, VARIABLE2...)VALUES (?,?)';
+    $nombre = Flight::request()->data->nombre;
+    $apellidos = Flight::request()->data->apellidos;
+
+    $sentencia = Flight::db()->prepare($sql);
+    $sentencia->bindParam();
+    $sentencia->execute();
+    $datos = $sentencia->fetchAll();
+    Flight::json(['Añadido']);
+
+
+});
+
+
+
+
+Flight::request('PUT /documentos',function() {
+    $nombre = Flight::request()->data->nombre;
+    $sql = 'UPDATE LIENTES SET VARIABLE = ?';
+});
+
+
+
+
+
+
+
+
+
+
+
 
 Flight::route('GET /clientes', function(){
         $sql = 'SELECT * FROM clientes';;
