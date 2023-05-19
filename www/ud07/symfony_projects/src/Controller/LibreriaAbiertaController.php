@@ -3,6 +3,9 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Psr\Cache\CacheItemInterface;
 
 
 
@@ -54,7 +57,35 @@ class LibreriaAbiertaController extends AbstractController {
         ['title' => 'Libreria abierta: librería']
         );
     }
+    
+        /**
+     * Función listar(): prueba de json
+     * Nombre de la ruta: listar.
+     * */
+    #[Route('/listar/{slug}', name: 'listar')]
+    public function listar(HttpClientInterface $httpClient, CacheInterface $cache, string $slug = null): Response
+    {
+        /**
+         * Guardo en una variable todos los datos del json.
+         */
+        //Ejercicio sin caché:
+         //$response = $httpClient->request('GET', 'https://raw.githubusercontent.com/sabelassm/json-example/master/animals-1.json');
+        //$animales = $response->toArray();
+        //Con caché:
 
+        $animales = $cache->get('animales_data', function(CacheItemInterface $cacheItem) use($httpClient) {
+            $response = $httpClient->request('GET', 'https://raw.githubusercontent.com/sabelassm/json-example/master/animals-1.json');
+            $cacheItem->expiresAfter(10);
+            return $response->toArray();
+        }
+    );
+
+
+        return $this->render('libreria/childListar.html.twig', 
+        ['title' => 'Listar','animales' => $animales]
+        
+        );
+    }
 }
 
 

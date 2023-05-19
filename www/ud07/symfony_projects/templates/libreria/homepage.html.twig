@@ -41,6 +41,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ path('libreria') }}"{#Pongo el pathname de la sección de librería para redirigir#}>Biblioteca</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ path('listar') }}"{#Pongo el pathname de la sección de librería para redirigir#}>Listar</a>
+                  </li>
                 </ul>
 
               </div>
@@ -50,6 +53,7 @@
 
         {#Bloque contenido, lo que está dentro de {% block contenido %} va a ser sustituido dentr de las plantillas hijas.#}
         {% block contenido %}
+        {{ component('alert') }}
                 <div class="row d-flex flex-column justify-content-center align-items-center bg-light text text-left pt-3 pb-3">
                     <article id="receta1" class="d-flex flex-column justify-content-center bg-light text text-left w-75">
                         <h1>Bienvenidos a {{title}}</h1>
